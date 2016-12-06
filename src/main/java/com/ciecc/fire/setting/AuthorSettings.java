@@ -1,4 +1,4 @@
-package com.ciecc.fire.config;
+package com.ciecc.fire.setting;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
