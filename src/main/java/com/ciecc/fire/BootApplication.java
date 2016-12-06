@@ -3,13 +3,22 @@ package com.ciecc.fire;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.DispatcherType;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,4 +83,44 @@ public class BootApplication {
 				.run(args);
 
 	}
+	
+	/*@Bean
+	public ServletRegistrationBean servletRegistrationBean(){
+		return new ServletRegistrationBean(new XxServlet(), "/xx/*");
+		
+	}*/
+	
+	
+	/***
+	 * 
+	 * @return
+	 */
+	/*@Bean
+	public FilterRegistrationBean myFilterRegistration() {
+	    FilterRegistrationBean registration = new FilterRegistrationBean();
+	    registration.setDispatcherTypes(DispatcherType.REQUEST);
+	    //registration.setFilter(new YYfilter());
+	    registration.setOrder(2);
+	    return registration;
+	}*/
+	
+	/***
+	 *  要禁用特定过滤器或Servlet bean的注册，请为其创建注册bean并将其标记为禁用。 例如：
+	 * @param filter 要禁用的filter
+	 * @return
+	 */
+	/*@Bean
+	public FilterRegistrationBean registration(MyFilter filter) {
+	    FilterRegistrationBean registration = new FilterRegistrationBean(filter);
+	    registration.setEnabled(false);
+	    return registration;
+	}*/
+
+	
+	/*@Bean
+	public ServletListenerRegistrationBean<Zzlistener> zzListenerServletRegistrationBean{
+	    
+	    return new ServletListenerRegistrationBean<Zzlistener>(new Zzlistener());
+	}*/
+	
 }
