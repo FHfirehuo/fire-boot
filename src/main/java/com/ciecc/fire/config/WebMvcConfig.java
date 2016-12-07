@@ -1,4 +1,4 @@
-package com.ciecc.fire.config;
+/*package com.ciecc.fire.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -13,3 +13,4 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	}
 	
 }
+*/

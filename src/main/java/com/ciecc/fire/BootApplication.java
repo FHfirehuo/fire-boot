@@ -8,6 +8,10 @@ import javax.servlet.DispatcherType;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
+import org.apache.catalina.Context;
+import org.apache.catalina.connector.Connector;
+import org.apache.tomcat.util.descriptor.web.SecurityCollection;
+import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.Banner;
@@ -56,7 +60,7 @@ public class BootApplication {
 				+ " author-age " + authorSettings.getAge();
 	}*/
 	
-	@RequestMapping("")
+	@RequestMapping("/")
 	public String index(Model model) {
 		Person single = new Person("aa", 11);
 		
@@ -90,14 +94,36 @@ public class BootApplication {
 	}
 	
 	
-	/*@Bean
+	@Bean
 	public EmbeddedServletContainerFactory servletContainer() {
-	    TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory();
-	    factory.setPort(9000);
+	    TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory(){
+
+			@Override
+			protected void postProcessContext(Context context) {
+				SecurityConstraint securityConstraint = new SecurityConstraint();
+				securityConstraint.setUserConstraint("CONFIDENIAL");
+				SecurityCollection collection = new SecurityCollection();
+				collection.addPattern("/*");
+				securityConstraint.addCollection(collection);
+				context.addConstraint(securityConstraint);
+			}
+	    	
+	    };
+	    /*factory.setPort(9000);
 	    factory.setSessionTimeout(10, TimeUnit.MINUTES);
-	    factory.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/notfound.html"));
+	    factory.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/notfound.html"));*/
 	    return factory;
-	}*/
+	}
+	
+	@Bean
+	public Connector httpConnector() {
+		Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+		connector.setScheme("http");
+		connector.setPort(8080);
+		connector.setSecure(false);
+		connector.setRedirectPort(8443);
+		return connector;
+	}
 	
 	/*@Bean
 	public ServletRegistrationBean servletRegistrationBean(){

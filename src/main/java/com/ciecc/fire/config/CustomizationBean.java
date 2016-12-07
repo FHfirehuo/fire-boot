@@ -1,4 +1,4 @@
-package com.ciecc.fire.config;
+/*package com.ciecc.fire.config;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,4 +18,4 @@ public class CustomizationBean implements EmbeddedServletContainerCustomizer {
         container.setSessionTimeout(10, TimeUnit.MINUTES); //session过期时间
     }
 
-}
+}*/
