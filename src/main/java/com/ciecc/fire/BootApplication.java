@@ -112,6 +112,8 @@ public class BootApplication {
 	    /*factory.setPort(9000);
 	    factory.setSessionTimeout(10, TimeUnit.MINUTES);
 	    factory.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/notfound.html"));*/
+	    
+	    factory.addAdditionalTomcatConnectors(httpConnector());
 	    return factory;
 	}
 	
