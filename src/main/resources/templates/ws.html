@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; UTF-8" />
+<title>Insert title here</title>
+</head>
+<body onload="disconnect()">
+	<noscript>
+		<h2 style="color: #ff0000">貌似你的浏览器不支持websocket</h2>
+	</noscript>
+
+	<div>
+		<button id="connect" onclick="connect()">连接</button>
+		<button id="disConnnect" disabled="disabled" onclick="disconnect()">断开连接</button>
+	</div>
+
+	<div id="conversationDiv">
+		<label>输入你的名字</label> <input type="text" id="name" />
+		<button id="sendName" onclick="sendName();">发送</button>
+		<p id="response"></p>
+	</div>
+
+	<script th:src="@{ws/sockjs.min.js}"></script>
+	<script th:src="@{ws/stomp.min.js}"></script>
+	<script th:src="@{jquery/jquery-1.12.4.min.js}"></script>
+
+	<script type="text/javascript">
+		var stompClient = null;
+
+		function setConnected(connected) {
+			document.getElementById('connect').disabled = connected;
+			document.getElementById('disConnnect').disabled = !connected;
+			document.getElementById('conversationDiv').style.visibility = connected ? 'visible'
+					: 'hidden';
+			$('#response').html();
+		}
+
+		function connect() {
+			var socket = new SockJS('/endopintWisely');//连接SockJS的endpoint名称为endopintWisely
+			stompClient = Stomp.over(socket);//使用Stomp资协议的websocket的客户端
+			stompClient.connect({}, function(frame) {//连接websocket服务端
+				setConnected(true);
+				console.log('Connected:' + frame);
+				stompClient.subscribe('topic/getResponse', function(response) {//通过stompClient.subscribe订阅topic/getResponse目标()发送的消息,这个是控制器的@sendto中定义的
+					showResponse(JSON.parse(response.body).responseMessage);
+				});
+			});
+		}
+
+		function disconnect() {
+			if (stompClient != null) {
+				stompClient.disconnect();
+			}
+
+			setConnected(false);
+			console.log('DisConnected:');
+		}
+
+		function sendName() {
+			var name = $('#name').val();
+
+			//通过stompClient.send向/welcome目标()发送消息,这个是在控制器的@messageMapping中定义的
+			stompClient.send("/welcome", {}, JSON.stringify({
+				'name' : name
+			}));
+		}
+
+		function showResponse(message) {
+			var response = $("#response");
+			response.html(message);
+		}
+	</script>
+</body>
+</html>
