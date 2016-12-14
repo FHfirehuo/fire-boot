@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>聊天室</title>
+</head>
+<body>
+	<noscript>
+		<h2 style="color: #ff0000">貌似你的浏览器不支持websocket</h2>
+	</noscript>
+
+	<p>聊天室</p>
+
+	<form id="fireform">
+		<textarea rows="4" cols="60" name="text"></textarea>
+		<input type="submit" />
+	</form>
+	
+	<div id="output">
+	
+	</div>
+
+	<script th:src="@{ws/sockjs.min.js}"></script>
+	<script th:src="@{ws/stomp.min.js}"></script>
+	<script th:src="@{jquery/jquery-1.12.4.min.js}"></script>
+
+	<script th:inline="javascript" type="text/javascript">
+		$('#fireform').submit(function(e) {
+			e.preventDefault();
+			var text = $('#fireform').find('textarea[name="text"]').val();
+			sendSpittle(text);
+		});
+
+		var sock = new SockJS("/endopintChat");
+		var stomp = Stomp.over(sock);
+
+		stomp.connect(null, null, function(frame) {//连接websocket服务端
+			stomp.subscribe("/user/queue/notifications", handleNotification);
+		});
+
+		function handleNotification(message) {
+			$('#output').append('<b>received: ' + message.body + '</b><br/>');
+		}
+
+		function sendSpittle(text) {
+			stomp.send("/chat", {}, text)
+		}
+
+		$('#stop').on('click', function() {
+			sock.close();
+		})
+	</script>
+</body>
+</html>

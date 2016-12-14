@@ -1,7 +1,12 @@
 package com.ciecc.fire.controller;
 
+import java.security.Principal;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import com.ciecc.fire.domain.BToSMessage;
@@ -16,5 +21,29 @@ public class WebSocketController {
 
 		Thread.sleep(3000);
 		return new SToBMessage("welcome, " + message.getName() + " ！");
+	}
+
+	private SimpMessagingTemplate messagingTemplate; // 通过messagingTemplate向浏览器发送消息
+
+	private final SimpMessageSendingOperations messageSendingOperations;
+
+	@Autowired
+	public WebSocketController(SimpMessageSendingOperations messageSendingOperations,
+			SimpMessagingTemplate messagingTemplate) {
+		this.messageSendingOperations = messageSendingOperations;
+		this.messagingTemplate = messagingTemplate;
+	}
+
+	@MessageMapping("chat") // 当浏览器向服务端发送请求时，通过@MessageMapping映射/welcome这个地址，类似于@RequestMessage
+	public void handleChat(Principal principal, String msg) {
+		if (principal.getName().equals("fire")) {
+			System.out.println(principal.getName() + "-send: " + msg);
+			messagingTemplate.convertAndSendToUser("wangtao", "/queue/notifications",
+					principal.getName() + "-send: " + msg);
+
+		} else {
+			messageSendingOperations.convertAndSendToUser("fire", "/queue/notifications",
+					principal.getName() + "-send: " + msg);
+		}
 	}
 }
