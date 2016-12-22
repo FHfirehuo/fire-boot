@@ -7,6 +7,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 
 import com.ciecc.fire.domain.BToSMessage;
@@ -34,6 +35,7 @@ public class WebSocketController {
 		this.messagingTemplate = messagingTemplate;
 	}
 
+	 //@SubscribeMapping//用于只发生一次的请求比如订阅
 	@MessageMapping("chat") // 当浏览器向服务端发送请求时，通过@MessageMapping映射/welcome这个地址，类似于@RequestMessage
 	public void handleChat(Principal principal, String msg) {
 		if (principal.getName().equals("fire")) {
