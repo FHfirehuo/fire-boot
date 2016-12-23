@@ -22,6 +22,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		http.portMapper().http(80).mapsTo(443);
 		http.authorizeRequests()
 		.antMatchers("/", "login").permitAll()
 		.anyRequest().authenticated()
@@ -39,9 +40,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		
-		//web.ignoring().antMatchers("/resources/static/**");
-		// web.ignore("/");
-		web.ignoring().antMatchers("/");
+		//ws
+		web.ignoring().antMatchers("/bootstrap/**","/images/**","/**/*.js", "/jpa/**");
+
 	}
 
 }

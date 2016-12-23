@@ -1,4 +1,4 @@
-package com.ciecc.fire.data.repository;
+package com.ciecc.fire.data.jpa;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
